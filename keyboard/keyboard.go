@@ -11,24 +11,29 @@ import (
 var Debug bool
 
 type Keyboard struct {
-	DeviceInfo    *hid.DeviceInfo
-	Device        *hid.Device
-	CurrentMode   Mode
-	Modes         [3]Mode
-	CurrentApp    App
-	Apps          []App
-	lastAppChange time.Time
+	DeviceInfo  *hid.DeviceInfo
+	Device      *hid.Device
+	CurrentMode Mode
+	Modes       [3]Mode
+	CurrentApp  App
+	Apps        []App
+
+	lastAppChange   time.Time
+	activeModifiers map[Key]bool
 }
 
 func NewKeyboard() Keyboard {
 	k := Keyboard{
-		lastAppChange: time.Now(),
-		CurrentMode:   QwertyMode{},
+		CurrentMode: QwertyMode{},
 		Modes: [3]Mode{
 			QwertyMode{},
 			QwertyMode{},
 			QwertyMode{},
 		},
+
+		// private
+		lastAppChange:   time.Now(),
+		activeModifiers: make(map[Key]bool),
 	}
 	return k
 }
@@ -83,6 +88,7 @@ func (k *Keyboard) process() {
 		}
 		switch b[0] {
 		case 1:
+			k.HandleModifierKeys(b[1])
 			k.HandleNormalKeys(b[2:])
 		case 2:
 			k.HandleMediaKey(b[1])

@@ -109,4 +109,14 @@ const (
 	MediaMute
 	MediaVolUp
 	MediaVolDown
+
+	// Modifier keys
+	LeftCtrl
+	LeftShift
+	LeftAlt
+	LeftMeta
+	RightCtrl
+	RightShift
+	RightAlt
+	RightMeta
 )

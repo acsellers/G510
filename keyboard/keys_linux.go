@@ -110,6 +110,15 @@ var keyMap = map[Key]int{
 	MediaMute:      uinput.KEY_MUTE,
 	MediaVolUp:     uinput.KEY_VOLUMEUP,
 	MediaVolDown:   uinput.KEY_VOLUMEDOWN,
+	// Modifier keys
+	LeftCtrl:   uinput.KEY_LEFTCTRL,
+	LeftShift:  uinput.KEY_LEFTSHIFT,
+	LeftAlt:    uinput.KEY_LEFTALT,
+	LeftMeta:   uinput.KEY_LEFTMETA,
+	RightCtrl:  uinput.KEY_RIGHTCTRL,
+	RightShift: uinput.KEY_RIGHTSHIFT,
+	RightAlt:   uinput.KEY_RIGHTALT,
+	RightMeta:  uinput.KEY_RIGHTMETA,
 }
 
 var kboard uinput.VKeyboard
