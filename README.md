@@ -1,5 +1,5 @@
 # G510
-Keyboard driver for G510 on Linux, written in Go
+Keyboard driver for G510, written in Go
 
 The keyboard package handles the actual driver bits. The current
 version is very early.
