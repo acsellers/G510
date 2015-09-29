@@ -8,6 +8,8 @@ import (
 	"github.com/GeertJohan/go.hid"
 )
 
+var Debug bool
+
 type Keyboard struct {
 	DeviceInfo    *hid.DeviceInfo
 	Device        *hid.Device
@@ -71,12 +73,14 @@ func (k *Keyboard) process() {
 	for {
 		b := make([]byte, 8)
 		k.Device.Read(b)
-		fmt.Printf(
-			"%s (%s): %v\n",
-			k.DeviceInfo.Path,
-			time.Now().Sub(last),
-			b,
-		)
+		if Debug {
+			fmt.Printf(
+				"%s (%s): %v\n",
+				k.DeviceInfo.Path,
+				time.Now().Sub(last),
+				b,
+			)
+		}
 		switch b[0] {
 		case 1:
 			k.HandleNormalKeys(b[2:])

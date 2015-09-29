@@ -1,6 +1,7 @@
 package keyboard
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/ben-bensdevzone/uinput"
@@ -126,9 +127,15 @@ func LookupKey(k Key) (int, bool) {
 }
 
 func RawDoKeyDown(k int) {
+	if Debug {
+		fmt.Println("KeyDown:", k)
+	}
 	kboard.SendKeyPress(k)
 }
 
 func RawDoKeyUp(k int) {
+	if Debug {
+		fmt.Println("KeyUp:", k)
+	}
 	kboard.SendKeyRelease(k)
 }
