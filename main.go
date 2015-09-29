@@ -1,18 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"image/color"
 	"log"
-	"time"
+	"os"
+	"os/signal"
 
-	"github.com/GeertJohan/go.hid"
-	"github.com/kylelemons/gousb/usb"
-)
-
-var (
-	Dev  *usb.Device
-	Keys usb.Endpoint
+	"github.com/acsellers/g510/keyboard"
 )
 
 var colors = []color.NRGBA{
@@ -41,53 +35,22 @@ var colors = []color.NRGBA{
 	{128, 64, 0, 0},    //something2
 }
 
+/*
 func SetColor(c color.NRGBA) {
 	data := []byte{0x05, c.R, c.G, c.B}
 	Dev.Control(33, 9, 0x305, 1, data)
 }
-
-func IgnorePath(path string) {
-	d, _ := hid.OpenPath(path)
-	b := make([]byte, 8)
-	for {
-		d.Read(b)
-	}
-}
+*/
 func main() {
-	devs, err := hid.Enumerate(0x046d, 0xc22d)
+	k := keyboard.NewKeyboard()
+	err := k.Start()
 	if err != nil {
 		log.Fatal(err)
 	}
-	for i, dev := range devs {
-		if i == 0 {
-			go IgnorePath(dev.Path)
-			continue
-		}
 
-		d, err := hid.OpenPath(dev.Path)
-		if err != nil {
-			log.Fatal(dev.Path, err)
-		}
+	k.SetColor(colors[0])
 
-		last := time.Now()
-		for {
-			b := make([]byte, 8)
-			d.Read(b)
-			fmt.Printf(
-				"%s (%s): %v\n",
-				dev.Path,
-				time.Now().Sub(last),
-				b,
-			)
-			switch b[0] {
-			case 1:
-				HandleNormalKeys(b[2:])
-			case 2:
-				HandleMediaKey(b[1])
-			case 3:
-				HandleSpecialKeys(b[1:])
-			}
-			last = time.Now()
-		}
-	}
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	<-c
 }

@@ -1,7 +1,6 @@
-package main
+package keyboard
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ben-bensdevzone/uinput"
@@ -112,21 +111,24 @@ var keyMap = map[Key]int{
 	MediaVolDown:   uinput.KEY_VOLUMEDOWN,
 }
 
-var keyboard uinput.VKeyboard
+var kboard uinput.VKeyboard
 
 func init() {
-	err := keyboard.Create("/dev/uinput")
+	err := kboard.Create("/dev/uinput")
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func DoKeyDown(k Key) {
-	fmt.Println("KeyDown:", k)
-	keyboard.SendKeyPress(keyMap[k])
+func LookupKey(k Key) (int, bool) {
+	ki, ok := keyMap[k]
+	return ki, ok
 }
 
-func DoKeyUp(k Key) {
-	fmt.Println("KeyUp:", k)
-	keyboard.SendKeyRelease(keyMap[k])
+func RawDoKeyDown(k int) {
+	kboard.SendKeyPress(k)
+}
+
+func RawDoKeyUp(k int) {
+	kboard.SendKeyRelease(k)
 }

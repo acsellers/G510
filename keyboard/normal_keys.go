@@ -1,11 +1,11 @@
-package main
+package keyboard
 
 var (
 	ignoreKeys = map[Key]bool{}
 	activeKeys = map[Key]bool{}
 )
 
-func HandleNormalKeys(keys []byte) {
+func (kboard Keyboard) HandleNormalKeys(keys []byte) {
 	pressed := make(map[Key]bool)
 	ignored := make(map[Key]bool)
 	for _, k := range keys {
@@ -20,27 +20,27 @@ func HandleNormalKeys(keys []byte) {
 			case ignoreKeys[key] && ignored[key]:
 				pressed[key] = true
 				if !activeKeys[key] {
-					DoKeyDown(Key(key))
+					kboard.CurrentMode.DoKeyDown(Key(key))
 				}
 			case ignoreKeys[key]:
 				ignored[key] = true
 			default:
 				pressed[key] = true
 				if !activeKeys[key] {
-					DoKeyDown(Key(key))
+					kboard.CurrentMode.DoKeyDown(Key(key))
 				}
 			}
 		default:
 			pressed[key] = true
 			if !activeKeys[key] {
-				DoKeyDown(Key(key))
+				kboard.CurrentMode.DoKeyDown(Key(key))
 			}
 		}
 	}
 
 	for key := range activeKeys {
 		if !pressed[key] {
-			DoKeyUp(Key(key))
+			kboard.CurrentMode.DoKeyUp(Key(key))
 		}
 	}
 

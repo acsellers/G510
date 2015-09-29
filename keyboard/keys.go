@@ -1,4 +1,4 @@
-package main
+package keyboard
 
 type Key uint8
 
