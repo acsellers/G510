@@ -75,7 +75,7 @@ func (k *Keyboard) HandleSpecialKeys(keys []byte) {
 		ignoreKeys[KeyF7] = false
 		k.CurrentMode.MacroKeyDown(7)
 	}
-	if keyMask&SpG7 != 0 {
+	if keyMask&SpG8 != 0 {
 		activeSpecials[SpG8] = true
 		ignoreKeys[KeyF8] = true
 		k.CurrentMode.MacroKeyUp(8)
