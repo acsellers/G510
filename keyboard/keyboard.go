@@ -11,12 +11,12 @@ import (
 var Debug bool
 
 type Keyboard struct {
-	DeviceInfo  *hid.DeviceInfo
-	Device      *hid.Device
-	CurrentMode Mode
-	Modes       [3]Mode
-	CurrentApp  App
-	Apps        []App
+	DeviceInfo      *hid.DeviceInfo
+	device0, Device *hid.Device
+	CurrentMode     Mode
+	Modes           [3]Mode
+	CurrentApp      App
+	Apps            []App
 
 	lastAppChange   time.Time
 	activeModifiers map[Key]bool
@@ -43,11 +43,16 @@ func (k Keyboard) SetColor(c color.NRGBA) {
 	k.Device.Control(33, 9, 0x305, 1, data)
 }
 
-func ignorePath(path string) {
-	d, _ := hid.OpenPath(path)
+func (k *Keyboard) ignorePath(path string) {
+	var err error
+	k.device0, err = hid.OpenPath(path)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	b := make([]byte, 8)
 	for {
-		d.Read(b)
+		k.device0.Read(b)
 	}
 }
 
@@ -58,7 +63,7 @@ func (k *Keyboard) Start() error {
 	}
 	for i, dev := range devs {
 		if i == 0 {
-			go ignorePath(dev.Path)
+			go k.ignorePath(dev.Path)
 			continue
 		}
 
@@ -69,6 +74,7 @@ func (k *Keyboard) Start() error {
 		}
 
 		go k.process()
+		go k.initLEDWatch()
 	}
 	return nil
 }

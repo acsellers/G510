@@ -35,12 +35,6 @@ var colors = []color.NRGBA{
 	{128, 64, 0, 0},    //something2
 }
 
-/*
-func SetColor(c color.NRGBA) {
-	data := []byte{0x05, c.R, c.G, c.B}
-	Dev.Control(33, 9, 0x305, 1, data)
-}
-*/
 func main() {
 	k := keyboard.NewKeyboard()
 	err := k.Start()
